@@ -1,0 +1,9 @@
+#cuerpo {
+    text-align: center;
+}
+
+#presentacion {
+    width: 80vw;
+    margin-left: 10vw;
+    color: rgb(248, 93, 124);
+}
