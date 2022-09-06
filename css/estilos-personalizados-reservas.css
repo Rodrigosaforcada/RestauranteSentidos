@@ -1,0 +1,20 @@
+.reservar-mesas {
+    margin: 20px 0;
+}
+
+.solicitar-reserva {
+    text-align: center;
+}
+
+.mesa {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.boton-reservas {
+    width: 30%;
+}
+
+.boton-reservas:hover {
+    width: 35%;
+}

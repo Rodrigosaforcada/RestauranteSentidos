@@ -11,6 +11,7 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
         <link href="css/estilos-personalizados.css" rel="stylesheet" />
+        <link href="css/estilos-personalizados-reservas.css" rel="stylesheet" />
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -20,7 +21,7 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                         <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
                     </ul>
@@ -35,38 +36,24 @@
                 <p class="text-white-50 mb-0">Una nueva experiencia</p>
             </div>
         </header>
-        <!-- Content section-->
-        <section class="py-5">
-            <div class="container my-5">
-                <div class="row justify-content-center">
-                    <div class="col-lg-6">
-                        <h2>Su nuevo espacio de confort</h2>
-                        <p class="lead">Buscamos atraer la atención de nuestros clientes a traves de experiencias inspiradas en la secucción de los sentidos</p>
-                        <p class="mb-0"> Para que pueda disfrutar de un momento de bienestar, en total armonía.</p>
-                    </div>
-                </div>
+        <section class="reservar-mesas">
+            <h1 class="solicitar-reserva">Reserve su mesa ahora mismo</h1>
+            <div class="mesa">
+                <img src="./assets/sillas2.jpg">
+                <h2>Mesa número 1</h2>
+                <a><button class="boton-reservas">Reservar esta mesa</button></a>
+            </div>
+            <div class="mesa">
+                <img src="./assets/sillas3.jpg">
+                <h2>Mesa número 2</h2>
+                <a><button class="boton-reservas">Reservar esta mesa</button></a>
+            </div>
+            <div class="mesa">
+                <img src="./assets/sillas4.jpg">
+                <h2>Mesa número 3</h2>
+                <a><button class="boton-reservas">Reservar esta mesa</button></a>
             </div>
         </section>
-        <!-- Image element - set the background image for the header in the line below-->
-        <div class="contenedor-imagenes">
-            <img class="imagen-sillas" src="assets/sillas2.jpg">
-            <img class="imagen-sillas" src="assets/sillas3.jpg">
-            <img class="imagen-sillas" src="assets/sillas4.jpg">
-        </div>
-        <!-- Content section-->
-        <section class="py-5">
-            <div class="container my-5">
-                <div class="row justify-content-center">
-                    <div class="col-lg-6">
-                        <h2>Traemos nuestras propios platillos</h2>
-                        <p class="lead">Encontrará en nuestro menú nuevas posibilidades de deleitar su pladar.</p>
-                        <p class="mb-0">Evocando sensaciones de paz y tranquilidad</p>
-                    </div>
-                    <a class="vinculo" href="reservas.html"><button class="boton-reservas">Reserve su mesa</button></a>
-                </div>
-            </div>
-        </section>
-        <!-- Footer-->
         <footer class="py-5 bg-dark">
             <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Sentidos 2022</p></div>
         </footer>

@@ -9,3 +9,27 @@
 .imagen-sillas {
     width: 32vw;
 }
+
+.vinculo {
+    width: 30%;
+    transition: margin-right 1s;
+}
+
+.vinculo:hover {
+    margin-right: 30px;
+}
+
+.boton-reservas {
+    color: crimson;
+    margin-top: 3vh;
+    width: 100%;
+    background-color: lightgrey;
+    transition: width 1s, padding 1s, font-size 1s, background-color 1s;
+}
+
+.boton-reservas:hover {
+    width: 115%;
+    padding: 6px 0;
+    font-size: 110%;
+    background-color: rgb(228, 188, 228);
+}
