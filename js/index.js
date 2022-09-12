@@ -2,7 +2,7 @@ import MesaReservaService from "./reservasMesasService.js";
 
 let mesaReservaService = new MesaReservaService();
 
-getMesaReserva();
+//getMesaReserva();
 
 function getMesaReserva() {
     mesaReservaService.getMesaReserva()
