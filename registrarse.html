@@ -70,21 +70,28 @@
         <fieldset id="fieldset-registro">
           <legend>Tus Datos</legend>
           <div class="field">
-            <input
-              type="text"
-              id="nombre-usuario"
-              placeholder="Nombre de Usuario"
-            />
-            <input type="text" id="apellido" placeholder="Apellido" />
-            <input type="text" id="dni" placeholder="DNI" />
-            <input type="text" id="celular" placeholder="celular" />
-            <input type="text" id="domicilio" placeholder="Domicilio" />
-            <input type="password" id="contrasena" placeholder="Contraseña" />
-            <input
-              type="email"
-              id="correo-electronico"
-              placeholder="correo electrónico"
-            />
+            <legend id="legend-obligatorio" class="legends-en-registro">Los campos con el símbolo * son obligatorios de rellenar correctamente</legend>
+            <legend id="legend-nombre" class="legends-en-registro">*</legend>
+            <input type="text" id="nombre-usuario" class="input-registro" placeholder="Nombre de Usuario"/>
+
+            <legend id="legend-apellido" class="legends-en-registro">*</legend>
+            <input type="text" id="apellido" class="input-registro" placeholder="Apellido" />
+
+            <legend id="legend-dni" class="legends-en-registro">*</legend>
+            <input type="text" id="dni" class="input-registro" placeholder="DNI" />
+
+            <legend id="legend-celular" class="legends-en-registro">*</legend>
+            <input type="text" id="celular" class="input-registro" placeholder="celular" />
+
+            <legend id="legend-domicilio" class="legends-en-registro">*</legend>
+            <input type="text" id="domicilio" class="input-registro" placeholder="Domicilio" />
+
+            <legend id="legend-contrasena" class="legends-en-registro">*</legend>
+            <input type="password" id="contrasena" class="input-registro" placeholder="Contraseña" />
+
+            <legend id="legend-correo-electronico" class="legends-en-registro">*</legend>
+            <input type="email" id="correo-electronico" class="input-registro" placeholder="correo electrónico" />
+
           </div>
         </fieldset>
         <a><button id="boton-registrarse" class="btn">Registrarte</button></a>

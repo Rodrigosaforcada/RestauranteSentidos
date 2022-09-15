@@ -8,6 +8,18 @@ const domicilio = document.getElementById('domicilio');
 const contrasena = document.getElementById('contrasena');
 const correoElectronico = document.getElementById('correo-electronico');
 
+
+const nombreMensajeValidacion = document.getElementById('legend-nombre');
+const apellidoMensajeValidacion = document.getElementById('legend-apellido');
+const dniMensajeValidacion = document.getElementById('legend-dni');
+const celularMensajeValidacion = document.getElementById('legend-celular');
+const domicilioMensajeValidacion = document.getElementById('legend-domicilio');
+const contrasenaMensajeValidacion = document.getElementById('legend-contrasena');
+const correoElectronicoMensajeValidacion = document.getElementById('legend-correo-electronico');
+
+const listaLegends = [nombreMensajeValidacion, apellidoMensajeValidacion, dniMensajeValidacion,
+    celularMensajeValidacion, dniMensajeValidacion, contrasenaMensajeValidacion, correoElectronicoMensajeValidacion];
+
 const botonRegistrarse = document.getElementById('boton-registrarse');
 
 let nombreCorrecto = false;
@@ -27,8 +39,9 @@ function validarNombre(comprobarNombre) {
     } else {
         console.log('nombre inválido');
         console.log(nombre.value);
-        alert('El nombre debe empezar con mayúscula y seguir con' 
-        + 'minúsculas y tener entre 3 y 20 caracteres');
+        nombreMensajeValidacion.innerText = 'El nombre debe empezar con mayúscula y seguir con' 
+        + 'minúsculas y tener entre 3 y 20 caracteres';
+        nombreMensajeValidacion.style.color = 'red';
     }
 }
 
@@ -41,8 +54,9 @@ function validarApellido(comprobarApellido) {
     } else {
         console.log('apellido inválido');
         console.log(apellido.value);
-        alert('El apellido debe empezar con mayúscula y seguir con' 
-        + 'minúsculas y tener entre 3 y 20 caracteres');
+        apellidoMensajeValidacion.innerText = 'El apellido debe empezar con mayúscula y seguir con' 
+        + 'minúsculas y tener entre 3 y 20 caracteres';
+        apellidoMensajeValidacion.style.color = 'red';
     }
 }
 
@@ -55,8 +69,9 @@ function validarDni(comprobarDni) {
     } else {
         console.log('dni inválido');
         console.log(dni.value);
-        alert('El DNI debe tener solo números y poseer ' 
-        + 'entre 6 y 9 caracteres');
+        dniMensajeValidacion.innerText = 'El DNI debe tener solo números y poseer ' 
+        + 'entre 6 y 9 caracteres';
+        dniMensajeValidacion.style.color = 'red';
     }
 }
 
@@ -69,8 +84,9 @@ function validarCelular(comprobarCelular) {
     } else {
         console.log('celular inválido');
         console.log(celular.value);
-        alert('El celular debe tener solo números y poseer ' 
-        + 'entre 10 y 12 caracteres');
+        celularMensajeValidacion.innerText = 'El celular debe tener solo números y poseer ' 
+        + 'entre 10 y 12 caracteres';
+        celularMensajeValidacion.style.color = 'red';
     }
 }
 
@@ -83,8 +99,9 @@ function validarDomicilio(comprobarDomicilio) {
     } else {
         console.log('domicilio inválido');
         console.log(domicilio.value);
-        alert('El domicilio debe tener ' 
-        + 'entre 6 y 20 caracteres');
+        domicilioMensajeValidacion.innerText = 'El domicilio debe tener ' 
+        + 'entre 6 y 20 caracteres';
+        domicilioMensajeValidacion.style.color = 'red';
     }
 }
 
@@ -97,8 +114,9 @@ function validarContrasena(comprobarContrasena) {
     } else {
         console.log('contrasena inválida');
         console.log(contrasena.value);
-        alert('La contraseña debe tener ' 
-        + 'entre 8 y 20 caracteres');
+        contrasenaMensajeValidacion.innerText = 'La contraseña debe tener ' 
+        + 'entre 8 y 20 caracteres';
+        contrasenaMensajeValidacion.style.color = 'red';
     }
 }
 
@@ -111,13 +129,18 @@ function validarCorreoElectronico(comprobarCorreoElectronico) {
     } else {
         console.log('correo electrónico inválido');
         console.log(correoElectronico.value);
-        alert('El correo electrónico debe contener entre 3 y 20 caracteres ' 
-        + 'antes del arroba y entre 2 y 10 caracteres antes del ".com"');
+        correoElectronicoMensajeValidacion.innerText = 'El correo electrónico debe contener entre 3 y 20 caracteres ' 
+        + 'antes del arroba y entre 2 y 10 caracteres antes del ".com"';
+        correoElectronicoMensajeValidacion.style.color = 'red';
     }
 }
 
 botonRegistrarse.addEventListener('click', (evento) => {
     evento.preventDefault();
+    listaLegends.forEach( mensaje => {
+        mensaje.innerText = "*";
+        mensaje.style.color = 'black';
+    })
     validarNombre(nombre.value);
     validarApellido(apellido.value);
     validarDni(dni.value);
