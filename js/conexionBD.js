@@ -24,4 +24,4 @@ const database = getDatabase();
 console.log(app);
 console.log(database);
 
-export { app, database};
+export { app, database };

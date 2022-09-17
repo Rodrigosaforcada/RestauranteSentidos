@@ -1,3 +1,7 @@
+import { database } from './conexionBD.js';
+import { ref, set } from "https://www.gstatic.com/firebasejs/9.9.4/firebase-database.js";
+import UsuarioRegistradoService from './usuariosRegistradosService.js';
+
 const formulario = document.getElementById('fieldset-registro').value;
 
 const nombre = document.getElementById('nombre-usuario');
@@ -152,6 +156,36 @@ botonRegistrarse.addEventListener('click', (evento) => {
         dniCorrecto && celularCorrecto &&
         domicilioCorrecto && contrasenaCorrecto &&
         correoElectronicoCorrecto) {
+
+        const registroUsuarios = new UsuarioRegistradoService;
+
+        function agregarNuevoUsuario() {
+            registroUsuarios.getCantidadUsuarioRegistrado()
+                .then((cantidad) => {
+                    console.log(cantidad + 1);
+                    const actualizarCantidadUsuarios = ref(database, 'cantidadUsuarios');
+                    set(actualizarCantidadUsuarios, cantidad + 1);
+
+                    const newUserRef = ref(database, `usuarios/usuario${cantidad + 1}`);
+                    console.log('usuario numero ' + (cantidad + 1) + ' agregado.');
+                    
+                    set(newUserRef, usuario);
+                })
+                .catch(error => console.log(error));
+        }
+
+        agregarNuevoUsuario();
+
+        const usuario = {
+            nombre: nombre.value,
+            apellido: apellido.value,
+            dni: dni.value,
+            celular: celular.value,
+            domicilio: domicilio.value,
+            password: contrasena.value,
+            email: correoElectronico.value
+        };
+
         alert('usuario agregado');
     }
     nombreCorrecto = false;

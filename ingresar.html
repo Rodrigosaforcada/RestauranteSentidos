@@ -71,12 +71,12 @@
           <legend>Tus Datos</legend>
           <div class="field">
             <label for="subject">Usuario y Contraseña:</label>
-            <input type="text" placeholder="Usuario" required />
-            <input type="password" placeholder="Contraseña" required />
+            <input id="usuario-ingresado" type="text" placeholder="Usuario" required />
+            <input id="contrasena-ingresado" type="password" placeholder="Contraseña" required />
           </div>
         </fieldset>
 
-        <a><button class="btn">Ingresar</button></a>
+        <a><button id="boton-ingresar" class="btn">Ingresar</button></a>
       </form>
     </section>
     <!-- Footer-->
@@ -89,5 +89,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
     <script src="js/scripts.js"></script>
+    <script type="module" src="js/verificarLogin.js"></script>
   </body>
 </html>
