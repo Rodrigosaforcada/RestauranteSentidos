@@ -8,6 +8,8 @@ const botonIngresar = document.getElementById('boton-ingresar');
 botonIngresar.addEventListener('click', (evento) => {
     evento.preventDefault();
 
+    console.log('Informacion get de sesion: ' + (sessionStorage.getItem('usuario')));
+
     console.log(usuarioIngresado.value);
     console.log(contrasenaIngresado.value);
 
@@ -29,6 +31,7 @@ botonIngresar.addEventListener('click', (evento) => {
                             nombreInvalido = false;
                             if(usuario.password == contrasenaIngresado.value) {
                                 alert('Sea bienvenido ' + usuario.nombre + ' ' + usuario.apellido);
+                                sessionStorage.setItem('usuario', usuario.dni);
                             } else {
                                 alert('Contraseña incorrecta, inténtelo nuevamente.');
                             }

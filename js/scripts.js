@@ -5,3 +5,6 @@
 */
 // This file is intentionally blank
 // Use this file to add JavaScript to your project
+
+console.log('Informacion get de sesion usuario: ' + (sessionStorage.getItem('usuario')));
+console.log('Informacion get de sesion mesa: ' + (sessionStorage.getItem('mesa')));
