@@ -31,7 +31,7 @@ botonIngresar.addEventListener('click', (evento) => {
                             nombreInvalido = false;
                             if(usuario.password == contrasenaIngresado.value) {
                                 alert('Sea bienvenido ' + usuario.nombre + ' ' + usuario.apellido);
-                                sessionStorage.setItem('usuario', usuario.dni);
+                                sessionStorage.setItem('usuario', usuario.id);
                             } else {
                                 alert('Contraseña incorrecta, inténtelo nuevamente.');
                             }

@@ -168,6 +168,17 @@ botonRegistrarse.addEventListener('click', (evento) => {
 
                     const newUserRef = ref(database, `usuarios/usuario${cantidad + 1}`);
                     console.log('usuario numero ' + (cantidad + 1) + ' agregado.');
+
+                    const usuario = {
+                        id: cantidad + 1,
+                        nombre: nombre.value,
+                        apellido: apellido.value,
+                        dni: dni.value,
+                        celular: celular.value,
+                        domicilio: domicilio.value,
+                        password: contrasena.value,
+                        email: correoElectronico.value
+                    };
                     
                     set(newUserRef, usuario);
                 })
@@ -175,16 +186,6 @@ botonRegistrarse.addEventListener('click', (evento) => {
         }
 
         agregarNuevoUsuario();
-
-        const usuario = {
-            nombre: nombre.value,
-            apellido: apellido.value,
-            dni: dni.value,
-            celular: celular.value,
-            domicilio: domicilio.value,
-            password: contrasena.value,
-            email: correoElectronico.value
-        };
 
         alert('usuario agregado');
     }
