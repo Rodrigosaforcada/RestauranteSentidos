@@ -18,7 +18,7 @@ const botonReserva = document.getElementById('confirmar-reserva');
 
 const consultarReserva = new MesaReservaService;
 
-function actualizarEstadoReservasDisponibles() {
+function actualizarEstadoReservasDisponibles(fechaDeReserva) {
     consultarReserva.getMesaReserva()
     .then((mesas) => {
 
@@ -29,7 +29,7 @@ function actualizarEstadoReservasDisponibles() {
 
         if(fechaYMesaDisponible) {
             set(refMesaYFecha, false);
-            agregarReservaAUsuarioSolicitante(inputFechaReserva.value);
+            agregarReservaAUsuarioSolicitante(`mesa${sessionStorage.getItem('mesa')}: ${inputFechaReserva.value}, reservado el ${fechaDeReserva}`);
         } else {
             alert('Esta mesa ya se encuentra reservada en esta misma fecha, por favor pruebe en otra fecha.');
         }
@@ -45,11 +45,11 @@ function agregarReservaAUsuarioSolicitante(reserva) {
 
         const usuarioConNuevaReserva = usuarios[`usuario${sessionStorage.getItem('usuario')}`];
 
-        if(usuarioConNuevaReserva.reservas == undefined) {
-            usuarioConNuevaReserva.reservas = [];
-            usuarioConNuevaReserva.reservas.push(reserva);
+        if(usuarioConNuevaReserva.reservasSinPagar == undefined) {
+            usuarioConNuevaReserva.reservasSinPagar = [];
+            usuarioConNuevaReserva.reservasSinPagar.push(reserva);
         } else {
-            usuarioConNuevaReserva.reservas.push(reserva);
+            usuarioConNuevaReserva.reservasSinPagar.push(reserva);
         }
 
         console.log("Objeto usuario a actualizar: ");
@@ -94,11 +94,11 @@ botonReserva.addEventListener('click', (evento) => {
             if(fechaIngresada[8] == '0') {
                 if(fechaIngresada[9] > fechaActual[9]) {
                     console.log('fallo');
-                   actualizarEstadoReservasDisponibles();
+                   actualizarEstadoReservasDisponibles(fechaActual);
                    console.log('estado disponible cambia a false.'); 
                 } else if(fechaIngresada[9] <= fechaActual[9] && fechaIngresada[6] == parseInt(fechaActual[6]) + 1) {
                     console.log('fallo');
-                    actualizarEstadoReservasDisponibles();
+                    actualizarEstadoReservasDisponibles(fechaActual);
                     console.log('estado disponible cambia a false.');
                 } else {
                     console.log('fallo'); 
@@ -107,12 +107,12 @@ botonReserva.addEventListener('click', (evento) => {
             } else {
                 if(parseInt(fechaIngresada[8] + fechaIngresada[9]) > parseInt(fechaActual[8] + fechaActual[9])) {
                     console.log('fallo');
-                    actualizarEstadoReservasDisponibles();
+                    actualizarEstadoReservasDisponibles(fechaActual);
                     console.log('estado disponible cambia a false.'); 
                  } else if(parseInt(fechaIngresada[8] + fechaIngresada[9]) <= parseInt(fechaActual[8] + fechaActual[9]) 
                     && fechaIngresada[6] == parseInt(fechaActual[6]) + 1) {
                     console.log('fallo');
-                     actualizarEstadoReservasDisponibles();
+                     actualizarEstadoReservasDisponibles(fechaActual);
                      console.log('estado disponible cambia a false.');
                  } else {
                     console.log('fallo'); 
@@ -129,12 +129,12 @@ botonReserva.addEventListener('click', (evento) => {
             if(fechaIngresada[8] == '0') {
                 if(fechaIngresada[9] > fechaActual[9]) {
                     console.log('fallo');
-                   actualizarEstadoReservasDisponibles();
+                   actualizarEstadoReservasDisponibles(fechaActual);
                    console.log('estado disponible cambia a false.'); 
                 } else if(fechaIngresada[9] <= fechaActual[9] 
                     && parseInt(fechaIngresada[5] + fechaIngresada[6]) == parseInt(fechaActual[5] + fechaActual[6]) + 1) {
                     console.log('fallo');
-                    actualizarEstadoReservasDisponibles();
+                    actualizarEstadoReservasDisponibles(fechaActual);
                     console.log('estado disponible cambia a false.');
                 } else {
                     console.log('fallo'); 
@@ -143,12 +143,12 @@ botonReserva.addEventListener('click', (evento) => {
             } else {
                 if(parseInt(fechaIngresada[8] + fechaIngresada[9]) < parseInt(fechaActual[8] + fechaActual[9])) {
                     console.log('fallo');
-                    actualizarEstadoReservasDisponibles();
+                    actualizarEstadoReservasDisponibles(fechaActual);
                     console.log('estado disponible cambia a false.'); 
                  } else if(parseInt(fechaIngresada[8] + fechaIngresada[9]) <= parseInt(fechaActual[8] + fechaActual[9]) 
                     && parseInt(fechaIngresada[5] + fechaIngresada[6]) == parseInt(fechaActual[5] + fechaActual[6]) + 1) {
                     console.log('fallo');
-                     actualizarEstadoReservasDisponibles();
+                     actualizarEstadoReservasDisponibles(fechaActual);
                      console.log('estado disponible cambia a false.');
                  } else {
                     console.log('fallo'); 

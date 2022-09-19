@@ -15,6 +15,7 @@
     <link href="css/styles.css" rel="stylesheet" />
     <link href="css/estilos-personalizados.css" rel="stylesheet" />
     <link href="css/estilos-personalizados-reservas.css" rel="stylesheet" />
+    <link href="css/realizar-pagos.css" rel="stylesheet" />
   </head>
   <body>
     <!-- Responsive navbar-->
@@ -73,12 +74,10 @@
         <fieldset>
           <legend>Datos para confirmar el pago:</legend>
           <div class="field">
-            <label for="subject">Pago:</label>
-            <input
-              id="codigo-pago"
-              placeholder="Ingrese el código obtenido en su comprobante"
-              required
-            />
+            <label for="subject">Pagos pendientes:</label>
+            <div id="pagos-adeudados" class="pagos_pendientes">
+              <h3 id="mensaje-sin-deudas" class="mensaje-libre-deuda">Actualmente no tiene pagos pendientes.</h3>
+            </div>
           </div>
         </fieldset>
 
@@ -100,5 +99,6 @@
     <!-- Core theme JS-->
     <script src="js/scripts.js"></script>
     <script src="js/finalizarSesion.js"></script>
+    <script type="module" src="js/pagosPendientes.js"></script>
   </body>
 </html>
