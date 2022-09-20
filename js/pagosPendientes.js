@@ -166,18 +166,55 @@ function CancelarReserva(fechaCancelada, reservaCancelada) {
     set(refMesaReservada, true);
     getUsuarioAPagar()
         .then(usuario => {
+            var cancelacionPermitida = true;
             const usuarioActualizado = usuario;
-            let reservasSinPagarActualizadas = [];
-            usuarioActualizado.reservasSinPagar.forEach( reserva => {
-                if(reserva != reservaCancelada) {
-                    reservasSinPagarActualizadas.push(reserva);
-                }
-            });
-            usuarioActualizado.reservasSinPagar = reservasSinPagarActualizadas;
 
-            console.log(usuarioActualizado);
-            set(refObtenerDatosUsuario, usuarioActualizado);
-            alert('Reserva cancelada.');
+            const regExFechaDeReservaRealizada = /.{2}$/;
+            let fechaDeReservaRealizada = regExFechaDeReservaRealizada.exec(reservaCancelada);
+            console.log('Fecha de realización de la reserva: ' + fechaDeReservaRealizada[0]);
+            
+            const regExFechaYMesaDeReserva = /mesa.{13}/;
+            let fechaYMesaDeReserva = regExFechaYMesaDeReserva.exec(reservaCancelada);
+            
+            const regExFechaDeReserva = /.{2}$/;
+            let fechaDeReserva = regExFechaDeReserva.exec(fechaYMesaDeReserva[0]);
+            console.log('Fecha de la reserva: ' + fechaDeReserva[0]);
+
+            if(fechaDeReservaRealizada[0][0] == '0') {
+                if(fechaDeReserva[0][0] == '0') {
+                    if(parseInt(fechaDeReservaRealizada[0][1]) + 2 == parseInt(fechaDeReserva[0][1])) {
+                        alert('No se puede cancelar una resererva con menos de 48 horas de anticipación.');
+                        cancelacionPermitida = false;
+                    }
+                } else if(parseInt(fechaDeReservaRealizada[0][1]) + 2 == parseInt(fechaDeReserva[0])) {
+                    alert('No se puede cancelar una resererva con menos de 48 horas de anticipación.');
+                        cancelacionPermitida = false;
+                }
+            } else {
+                if(fechaDeReserva[0][0] == '0') {
+                    if(parseInt(fechaDeReservaRealizada[0]) + 2 == parseInt(fechaDeReserva[0][1])) {
+                        alert('No se puede cancelar una resererva con menos de 48 horas de anticipación.');
+                        cancelacionPermitida = false;
+                    }
+                } else if(parseInt(fechaDeReservaRealizada[0]) + 2 == parseInt(fechaDeReserva[0])) {
+                    alert('No se puede cancelar una resererva con menos de 48 horas de anticipación.');
+                        cancelacionPermitida = false;
+                }
+            }
+
+            if(cancelacionPermitida) {
+                let reservasSinPagarActualizadas = [];
+                usuarioActualizado.reservasSinPagar.forEach( reserva => {
+                    if(reserva != reservaCancelada) {
+                        reservasSinPagarActualizadas.push(reserva);
+                    }
+                });
+                usuarioActualizado.reservasSinPagar = reservasSinPagarActualizadas;
+    
+                console.log(usuarioActualizado);
+                set(refObtenerDatosUsuario, usuarioActualizado);
+                alert('Reserva cancelada.');
+            }
         })
         .catch(error => {console.log(error)});
 }

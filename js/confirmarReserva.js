@@ -1,7 +1,7 @@
 import MesaReservaService from './reservasMesasService.js';
 import UsuarioRegistradoService from './usuariosRegistradosService.js';
 import { database } from './conexionBD.js';
-import { ref, set } from "https://www.gstatic.com/firebasejs/9.9.4/firebase-database.js";
+import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.9.4/firebase-database.js";
 
 if(sessionStorage.getItem('usuario') == null) {
     alert('Por favor inicie sesión o regístrese si previamente no lo ha hecho.');
@@ -37,25 +37,87 @@ function actualizarEstadoReservasDisponibles(fechaDeReserva) {
 
 const usuarioSolicitante = new UsuarioRegistradoService;
 
+var permisoPagoAutomatico = false;
+
 function agregarReservaAUsuarioSolicitante(reserva) {
     usuarioSolicitante.getUsuarioRegistrado()
     .then((usuarios) => {
+        permisoPagoAutomatico = false;
 
         const usuarioConNuevaReserva = usuarios[`usuario${sessionStorage.getItem('usuario')}`];
 
-        if(usuarioConNuevaReserva.reservasSinPagar == undefined) {
-            usuarioConNuevaReserva.reservasSinPagar = [];
-            usuarioConNuevaReserva.reservasSinPagar.push(reserva);
-        } else {
-            usuarioConNuevaReserva.reservasSinPagar.push(reserva);
+        const regExFechaDeReservaRealizada = /.{2}$/;
+        let fechaDeReservaRealizada = regExFechaDeReservaRealizada.exec(reserva);
+        console.log('Fecha de realización de la reserva: ' + fechaDeReservaRealizada[0]);
+        
+        const regExFechaYMesaDeReserva = /mesa.{13}/;
+        let fechaYMesaDeReserva = regExFechaYMesaDeReserva.exec(reserva);
+        
+        const regExFechaDeReserva = /.{2}$/;
+        let fechaDeReserva = regExFechaDeReserva.exec(fechaYMesaDeReserva[0]);
+        console.log('Fecha de la reserva: ' + fechaDeReserva[0]);
+
+        function reservaPagadaAutomaticamente(reservaRecibida) {
+            if(usuarioConNuevaReserva.reservasPagadas == undefined) {
+                usuarioConNuevaReserva.reservasPagadas = [];
+                usuarioConNuevaReserva.reservasPagadas.push(reservaRecibida);
+            } else {
+                usuarioConNuevaReserva.reservasPagadas.push(reservaRecibida);
+            }
+
+            console.log("Objeto usuario a actualizar: ");
+            console.log(usuarioConNuevaReserva);
+    
+            const refUsuarioQueHaReservado = ref(database, `usuarios/usuario${sessionStorage.getItem('usuario')}`);
+            set(refUsuarioQueHaReservado, usuarioConNuevaReserva);
+            alert('Reserva agendada y pagada automáticamente.');
         }
 
-        console.log("Objeto usuario a actualizar: ");
-        console.log(usuarioConNuevaReserva);
+        if(fechaDeReservaRealizada[0][0] == '0') {
+            if(fechaDeReserva[0][0] == '0') {
+                if(parseInt(fechaDeReservaRealizada[0][1]) + 1 == parseInt(fechaDeReserva[0][1])) {
+                    //Pago automático
+                    aumentarCantidadIngresosPorReservas();
+                    permisoPagoAutomatico = true;
+                    reservaPagadaAutomaticamente(reserva);
+                }
+            } else if(parseInt(fechaDeReservaRealizada[0][1]) + 1 == parseInt(fechaDeReserva[0])) {
+                //Pago automático
+                    aumentarCantidadIngresosPorReservas();
+                    permisoPagoAutomatico = true;
+                    reservaPagadaAutomaticamente(reserva);
+            }
+        } else {
+            if(fechaDeReserva[0][0] == '0') {
+                if(parseInt(fechaDeReservaRealizada[0]) + 1 == parseInt(fechaDeReserva[0][1])) {
+                    //Pago automático
+                    aumentarCantidadIngresosPorReservas();
+                    permisoPagoAutomatico = true;
+                    reservaPagadaAutomaticamente(reserva);
+                }
+            } else if(parseInt(fechaDeReservaRealizada[0]) + 1 == parseInt(fechaDeReserva[0])) {
+                //Pago automático
+                    aumentarCantidadIngresosPorReservas();
+                    permisoPagoAutomatico = true;
+                    reservaPagadaAutomaticamente(reserva);
+            }
+        }
 
-        const refUsuarioQueHaReservado = ref(database, `usuarios/usuario${sessionStorage.getItem('usuario')}`);
-        set(refUsuarioQueHaReservado, usuarioConNuevaReserva);
-        alert('Reserva agendada.');
+        if(!permisoPagoAutomatico) {
+            if(usuarioConNuevaReserva.reservasSinPagar == undefined) {
+                usuarioConNuevaReserva.reservasSinPagar = [];
+                usuarioConNuevaReserva.reservasSinPagar.push(reserva);
+            } else {
+                usuarioConNuevaReserva.reservasSinPagar.push(reserva);
+            }
+    
+            console.log("Objeto usuario a actualizar: ");
+            console.log(usuarioConNuevaReserva);
+    
+            const refUsuarioQueHaReservado = ref(database, `usuarios/usuario${sessionStorage.getItem('usuario')}`);
+            set(refUsuarioQueHaReservado, usuarioConNuevaReserva);
+            alert('Reserva agendada.');
+        }
     })
     .catch(error => console.log(error));
 };
@@ -157,3 +219,31 @@ botonReserva.addEventListener('click', (evento) => {
         }
     }
 });
+
+//Se consulta los ingresos totales por reservas para acumularlos
+
+const refIngresosTotalesReservas = ref(database, 'ingresosTotalesPorReservas');
+
+function getIngresosTotalesPorReservas() {
+    const promise = new Promise((resolve, reject) => {
+        onValue(refIngresosTotalesReservas, (snapshot) => {
+            const data = snapshot.val();
+            resolve(data);
+        }, {
+            onlyOnce: true
+        });
+    });
+
+    return promise;
+}
+
+function aumentarCantidadIngresosPorReservas() {
+    getIngresosTotalesPorReservas()
+        .then(ingresosTotales => {
+
+            let acumulacionIngresos = ingresosTotales;
+            acumulacionIngresos += 500;
+            set(refIngresosTotalesReservas, acumulacionIngresos);
+        })
+        .catch(error => {console.log(error)});
+}
