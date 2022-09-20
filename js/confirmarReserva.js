@@ -25,8 +25,6 @@ function actualizarEstadoReservasDisponibles(fechaDeReserva) {
         const fechaYMesaDisponible = mesas[`mesa${sessionStorage.getItem('mesa')}`]['disponible'][inputFechaReserva.value];
         const refMesaYFecha = ref(database, `mesas/mesa${sessionStorage.getItem('mesa')}/disponible/${inputFechaReserva.value}`);
 
-        console.log('Estado anterior de disponibilidad de la mesa: ' + fechaYMesaDisponible);
-
         if(fechaYMesaDisponible) {
             set(refMesaYFecha, false);
             agregarReservaAUsuarioSolicitante(`mesa${sessionStorage.getItem('mesa')}: ${inputFechaReserva.value}, reservado el ${fechaDeReserva}`);
@@ -57,6 +55,7 @@ function agregarReservaAUsuarioSolicitante(reserva) {
 
         const refUsuarioQueHaReservado = ref(database, `usuarios/usuario${sessionStorage.getItem('usuario')}`);
         set(refUsuarioQueHaReservado, usuarioConNuevaReserva);
+        alert('Reserva agendada.');
     })
     .catch(error => console.log(error));
 };

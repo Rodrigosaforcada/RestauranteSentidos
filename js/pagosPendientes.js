@@ -1,5 +1,6 @@
 import { database } from './conexionBD.js';
 import { ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.9.4/firebase-database.js";
+import MesaReservaService from "./reservasMesasService.js";
 
 const contenedorDePagosPendientes = document.getElementById('pagos-adeudados');
 const mensajeSinDeuda = document.getElementById('mensaje-sin-deudas');
@@ -48,13 +49,17 @@ function getReservasDelUsuario() {
 
                 botonRealizarPago.addEventListener('click', evento => {
                     evento.preventDefault();
-                    let mensajeReserva = evento.target.parentNode.parentNode.childNodes[2].innerText;
+                    deshabilitarTodosLosBotones();
+                    let id = parseInt(evento.target.id[evento.target.id.length - 1]);
+                    let mensajeReserva = evento.target.parentNode.parentNode.childNodes[id * 2].innerText;
                     console.log(mensajeReserva);
                     const regExSoloReserva = /mesa.{1,38}/;
                     let reservaSolo = regExSoloReserva.exec(mensajeReserva);
                     console.log(reservaSolo[0]);
+
                     pagarReserva(reservaSolo[0]);
-                    location.reload();
+
+                    setTimeout(() => {location.reload();}, 2000);
                 });
 
                 contenedorPagoYCancelacion.appendChild(botonRealizarPago);
@@ -63,6 +68,27 @@ function getReservasDelUsuario() {
                 botonCancelarReserva.innerText = `Cancelar la Reserva N°${contadorReservas}`;
                 botonCancelarReserva.className ='boton-cancelar-reserva';
                 botonCancelarReserva.id = `boton-cancelar-reserva${contadorReservas}`;
+
+                botonCancelarReserva.addEventListener('click', evento => {
+                    evento.preventDefault();
+                    deshabilitarTodosLosBotones();
+                    let id = parseInt(evento.target.id[evento.target.id.length - 1]);
+                    let mensajeReserva = evento.target.parentNode.parentNode.childNodes[id * 2].innerText;
+                    console.log(mensajeReserva);
+                    const regExReservaCompleta = /mesa.{38}/;
+                    let reservaCompleta = regExReservaCompleta.exec(mensajeReserva);
+                    console.log('Cancelar: ' + reservaCompleta[0]);
+                    const regExSoloReserva = /mesa.{13}/;
+                    let reservaSolo = regExSoloReserva.exec(mensajeReserva);
+                    const regExSoloFechaReserva = /.{10}$/;
+                    let fechaReservaSolo = regExSoloFechaReserva.exec(reservaSolo[0]);
+                    console.log('Cancelar: ' + fechaReservaSolo[0]);
+
+                    CancelarReserva(fechaReservaSolo[0], reservaCompleta[0]);
+
+                    setTimeout(() => {location.reload();}, 2000);
+                });
+
                 contenedorPagoYCancelacion.appendChild(botonCancelarReserva);
                 
                 contenedorDePagosPendientes.appendChild(contenedorPagoYCancelacion);
@@ -75,6 +101,34 @@ function getReservasDelUsuario() {
 }
 
 getReservasDelUsuario();
+
+//Se consulta los ingresos totales por reservas para acumularlos
+
+const refIngresosTotalesReservas = ref(database, 'ingresosTotalesPorReservas');
+
+function getIngresosTotalesPorReservas() {
+    const promise = new Promise((resolve, reject) => {
+        onValue(refIngresosTotalesReservas, (snapshot) => {
+            const data = snapshot.val();
+            resolve(data);
+        }, {
+            onlyOnce: true
+        });
+    });
+
+    return promise;
+}
+
+function aumentarCantidadIngresosPorReservas() {
+    getIngresosTotalesPorReservas()
+        .then(ingresosTotales => {
+
+            let acumulacionIngresos = ingresosTotales;
+            acumulacionIngresos += 500;
+            set(refIngresosTotalesReservas, acumulacionIngresos);
+        })
+        .catch(error => {console.log(error)});
+}
 
 //Se crea la opcion de pagar y guardar los datos de la reserva pagada
 
@@ -98,14 +152,39 @@ function pagarReserva(reservaConfirmada) {
 
             console.log(usuarioActualizado);
             set(refObtenerDatosUsuario, usuarioActualizado);
-
-            let acumulacionIngresos = 0;
-
-            const refSaldoEmpresaIngresoPorReservas = ref(database, 'ingresosTotalesPorReservas');
-
-            acumulacionIngresos += 500;
-
-            set(refSaldoEmpresaIngresoPorReservas, acumulacionIngresos);
+            aumentarCantidadIngresosPorReservas();
+            alert('Pago exitoso.');
         })
         .catch(error => {console.log(error)});
+}
+
+//Se crea la funcion para cancelar una reserva, de manera que se borra del usuario y se 
+//actualiza el estado de disponibilidad de la mesa corresondiente
+
+function CancelarReserva(fechaCancelada, reservaCancelada) {
+    const refMesaReservada = ref(database, `mesas/mesa${sessionStorage.getItem('mesa')}/disponible/${fechaCancelada}`);
+    set(refMesaReservada, true);
+    getUsuarioAPagar()
+        .then(usuario => {
+            const usuarioActualizado = usuario;
+            let reservasSinPagarActualizadas = [];
+            usuarioActualizado.reservasSinPagar.forEach( reserva => {
+                if(reserva != reservaCancelada) {
+                    reservasSinPagarActualizadas.push(reserva);
+                }
+            });
+            usuarioActualizado.reservasSinPagar = reservasSinPagarActualizadas;
+
+            console.log(usuarioActualizado);
+            set(refObtenerDatosUsuario, usuarioActualizado);
+            alert('Reserva cancelada.');
+        })
+        .catch(error => {console.log(error)});
+}
+
+function deshabilitarTodosLosBotones() {
+    let botones = document.querySelectorAll('button');
+    botones.forEach(boton => {
+        boton.disabled = true;
+    })
 }
